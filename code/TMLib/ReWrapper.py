@@ -1,43 +1,4 @@
-import lea
-import scapy.layers.inet as inet
-import scapy.layers.inet6 as inet6
-import scapy.layers.dns as dns
-import scapy.layers.l2 as l2
-import scapy.utils
-
-import ID2TLib.Utility as Util
-
-import TMLib.Utility as MUtil
-import TMLib.TMdict as TMdict
-import TMLib.PacketProcessing as TMpp
-import TMLib.TimestampGeneration as TMtg
-
-import TMLib.Definitions as TMdef
-
-import scapy_extend.http as http
-
-recognized_protocols = [
-## Ether
-inet.Ether
-## ARP
-, l2.ARP
-## IPv4
-, inet.IP
-## IPv6
-, inet6.IPv6
-## ICMP
-, inet.ICMP
-, inet.IPerror
-, inet.TCPerror
-, inet.UDPerror
-, inet.ICMPerror
-## TCP
-, inet.TCP
-## UDP
-, inet.UDP
-## DNS
-, dns.DNS
-]
+from . import Definitions as TMdef
 
 class ReWrapper(object):
     """
@@ -55,7 +16,16 @@ class ReWrapper(object):
     5. Digest packets (applies specified functions to packets)
     """
 
-    def __init__(self, _statistics, _globalRWdict, _conversationRWdict, _packetRWdict):
+    def __init__(self, _statistics, _globalRWdict, _conversationRWdict, _packetRWdict, _nopayload):
+        """
+        Constructor for ReWrapper instance. _nopayload must be set for proper functioning of the ReWrapper.
+
+        :param _statistics: Statistics object representing background traffic statistics
+        :param _globalRWdict: GlobalRWDict object
+        :param _conversationRWdict: ConversationRWdict object
+        :param _packetRWdict: PacketRWdict object
+        :param _nopayload: Type detecting empty payload (scapy.packet.NoPaylod in case of Scapy)
+        """
 
         if _statistics is None or _globalRWdict is None or _conversationRWdict is None or _packetRWdict is None:
             raise TypeError('NoneType passed on rewrapper init.')
@@ -68,6 +38,7 @@ class ReWrapper(object):
 
         # if not isinstance(_packetRWdict, TMdict.PacketDataRWdict):
         #     raise TypeError('Wrong dictionary type passed on rewrapper init, TMdict.PacketDataRWdict expected but got ' + str(type(_packetRWdict)))
+        self.nopayload = _nopayload
         
         self.statistics = _statistics
 
@@ -86,12 +57,20 @@ class ReWrapper(object):
 
         self.timestamp_function = None
         self.timestamp_postprocess = []
-        self.data_dict[TMdef.GLOBAL]['generate_timestamp_function_alt'] = TMtg.timestamp_dynamic_shift
+        self.data_dict[TMdef.GLOBAL]['generate_timestamp_function_alt'] = None
+
+        self.pruned_protocol = set()
 
 
 ##################################
 ###### Configuration 
 ##################################
+
+    def add_pruned_protocol(self, protocol):
+        """
+        Add pruned protocol. During packet rewrapping, packet processing will stop at this protocol.
+        """
+        self.pruned_protocol.add(protocol)
 
     
     def enqueue_preprocessing_function(self, protocol, function):
@@ -340,26 +319,28 @@ class ReWrapper(object):
 
         :param packet: Interpreted packet; expected scapy protocol packet.
         """
+        if isinstance(packet, self.nopaylod)
+
         protocol = type(packet)
-        if protocol in recognized_protocols:
-#            self.layers.append(packet)
+        if protocol in self.pruned_protocol:
+            return 
 
-            preprocess_f = self.preprocess_dict.get(protocol)
-            if preprocess_f:
-                for f in preprocess_f:
-                    f(packet, self.data_dict)
+        preprocess_f = self.preprocess_dict.get(protocol)
+        if preprocess_f:
+            for f in preprocess_f:
+                f(packet, self.data_dict)
 
-            process_f = self.process_dict.get(protocol)
-            if process_f:
-                for f in process_f: # TEST - does changing port prevent parsing protocol in TCP packet?
-                    f(packet, self.data_dict)
+        process_f = self.process_dict.get(protocol)
+        if process_f:
+            for f in process_f: # TEST - does changing port prevent parsing protocol in TCP packet?
+                f(packet, self.data_dict)
 
-            postprocess_f = self.postprocess_dict.get(protocol)
-            if postprocess_f:
-                for f in postprocess_f:
-                    f(packet, self.data_dict)
+        postprocess_f = self.postprocess_dict.get(protocol)
+        if postprocess_f:
+            for f in postprocess_f:
+                f(packet, self.data_dict)
 
-            self.unwrap(packet.payload)
+        self.unwrap(packet.payload)
 
 
     def digest(self, packet):

@@ -1,9 +1,8 @@
 import lea
 
 import ID2TLib.Utility as Util
-import TMLib.Utility as MUtil
 
-import TMLib.Definitions as TMdef
+from . import Definitions as TMdef
 
 class GlobalRWdict(dict):
     """

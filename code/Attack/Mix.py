@@ -1,8 +1,5 @@
 import logging
-import random as rnd
-import os
 
-import lea
 import scapy.layers.inet as inet
 import scapy.utils
 
@@ -14,12 +11,12 @@ import ID2TLib.PcapFile as PcapFile
 import Core.Statistics as Statistics
 
 import TMLib.ReWrapper as ReWrapper
-import TMLib.Utility as MUtil
+import TMLib.utils.utils as MUtil
 import TMLib.TMdict as TMdict
 
 import TMLib.Definitions as TMdef
 
-import TMLib.TMmanager as TMm
+import TMLib.SubMng as TMm
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 

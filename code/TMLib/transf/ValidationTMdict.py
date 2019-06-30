@@ -1,5 +1,4 @@
-import TMLib.TMdict as TMdict
-import TMLib.TMdef as TMdef
+import ..TMdef as TMdef
 
 import numbers
 

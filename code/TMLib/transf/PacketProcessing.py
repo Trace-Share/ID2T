@@ -4,12 +4,13 @@ import scapy.layers.inet as inet
 import scapy.layers.inet6 as inet6
 import scapy.layers.dns as dns
 #import scapy_http.http as http
-import scapy_extend.http as http
 import scapy.utils
+
+import scapy_extend.http as http
 
 import re
 
-import TMLib.Definitions as TMdef
+from .. import Definitions as TMdef
 
 
 #########################################

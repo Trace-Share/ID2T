@@ -3,9 +3,9 @@ import scapy.layers.inet as inet
 import scapy.layers.l2 as l2
 import scapy.layers.dns as dns
 
-import TMLib.TMUnitTest as lib
+import TMLib.utils.TMUnitTest as lib
 
-import TMLib.PacketProcessing as pp
+import TMLib.transf.PacketProcessing as pp
 
 import TMLib.Definitions as TMdef
 

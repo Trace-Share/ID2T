@@ -2,7 +2,7 @@ import random
 
 import ID2TLib.Utility as Util
 
-import TMLib.Definitions as TMdef 
+from .. import Definitions as TMdef 
 
 ###############################################
 ################## Timestamp delay

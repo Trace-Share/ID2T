@@ -1,5 +1,5 @@
 import unittest
-import TMLib.TMUnitTest as lib
+import TMLib.utils.TMUnitTest as lib
 
 import TMLib.ReWrapper as ReWrap
 import TMLib.Definitions as TMdef

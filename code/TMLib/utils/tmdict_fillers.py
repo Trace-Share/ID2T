@@ -1,10 +1,6 @@
-import ID2TLib.Utility as Util
-
-import TMLib.Definitions as TMdef 
-
-import TMLib.ReWrapper as ReWrapper
-
 import numbers
+
+import ..Definitions as TMdef 
 
 def make_attack_tcp_avg_delay_map(data, config):
     """
@@ -34,13 +30,15 @@ def make_target_tcp_avg_delay_map(data, config):
         make_tcp_avg_delay_map(data.statistics, data, TMdef.TARGET)
 
 
-def make_tcp_delay_map_forLabel(statistics, data, source, label):
+def make_tcp_delay_map_forLabel(label, statistics, data, source):
     """
     Fills TMdef.GLOBAL dictionary map of tcp handshake average delays (tcp_avg_delay_map)
     based on provided statistics for each existing conversation in statistics.
 
     :param statistics: Core.Statistics.Statistics object containing pcap statistics
+
     :param data: TMLib.TMdict.GlobalRWdict dictionary
+
     :param source: TMdef.ATTACK or TMdef.Target
     """
     LABELS = {
@@ -74,7 +72,7 @@ def make_tcp_delay_map_forLabel(statistics, data, source, label):
         ip_dict[conversation[0]] = conversation[2]
 
 
-def make_tcp_avg_delay_map(statistics, data, source):
+def make_tcp_avg_delay_map(*args, **kwargs):
     """
     Fills TMdef.GLOBAL dictionary map of tcp handshake average delays (tcp_avg_delay_map)
     based on provided statistics for each existing conversation in statistics.
@@ -83,10 +81,10 @@ def make_tcp_avg_delay_map(statistics, data, source):
     :param data: TMLib.TMdict.GlobalRWdict dictionary
     :param source: TMdef.ATTACK or TMdef.Target
     """
-    make_tcp_delay_map_forLabel('avg')
+    make_tcp_delay_map_forLabel('avg', *args, **kwargs)
 
 
-def make_tcp_min_delay_map(statistics, data, source):
+def make_tcp_min_delay_map(*args, **kwargs):
     """
     Fills TMdef.GLOBAL dictionary map of tcp handshake average delays (tcp_avg_delay_map)
     based on provided statistics for each existing conversation in statistics.
@@ -95,10 +93,10 @@ def make_tcp_min_delay_map(statistics, data, source):
     :param data: TMLib.TMdict.GlobalRWdict dictionary
     :param source: TMdef.ATTACK or TMdef.Target
     """
-    make_tcp_delay_map_forLabel('min')
+    make_tcp_delay_map_forLabel('min', *args, **kwargs)
 
 
-def make_tcp_max_delay_map(statistics, data, source):
+def make_tcp_max_delay_map(*args, **kwargs):
     """
     Fills TMdef.GLOBAL dictionary map of tcp handshake average delays (tcp_avg_delay_map)
     based on provided statistics for each existing conversation in statistics.
@@ -107,7 +105,7 @@ def make_tcp_max_delay_map(statistics, data, source):
     :param data: TMLib.TMdict.GlobalRWdict dictionary
     :param source: TMdef.ATTACK or TMdef.Target
     """
-    make_tcp_delay_map_forLabel('max')
+    make_tcp_delay_map_forLabel('max', *args, **kwargs)
 
 
 def make_mac_map(data, config):

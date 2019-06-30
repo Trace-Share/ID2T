@@ -18,9 +18,9 @@ import Core.Statistics as Statistics
 
 import Attack.Mix as Mix
 import TMLib.ReWrapper as ReWrapper
-import TMLib.Utility as MUtil
+import TMLib.utils.utils as MUtil
 import TMLib.TMdict as TMdict
-import TMLib.Testing as Testing
+import TMLib.utils.db_utils as Testing
 
 import TMLib.Definitions as TMdef
 

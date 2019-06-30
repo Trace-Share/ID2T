@@ -319,7 +319,8 @@ class ReWrapper(object):
 
         :param packet: Interpreted packet; expected scapy protocol packet.
         """
-        if isinstance(packet, self.nopaylod)
+        if isinstance(packet, self.nopayload):
+            return
 
         protocol = type(packet)
         if protocol in self.pruned_protocol:

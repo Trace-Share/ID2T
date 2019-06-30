@@ -319,7 +319,7 @@ class ReWrapper(object):
 
         :param packet: Interpreted packet; expected scapy protocol packet.
         """
-        if isinstance(packet, self.nopayload):
+        if isinstance(packet, self.nopayload) or packet is None:
             return
 
         protocol = type(packet)

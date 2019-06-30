@@ -1,6 +1,6 @@
 import numbers
 
-import ..Definitions as TMdef 
+from .. import Definitions as TMdef 
 
 def make_attack_tcp_avg_delay_map(data, config):
     """

@@ -1,4 +1,4 @@
-import ..TMdef as TMdef
+from .. import Definitions as TMdef
 
 import numbers
 

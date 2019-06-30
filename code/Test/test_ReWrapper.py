@@ -4,6 +4,7 @@ import TMLib.utils.TMUnitTest as lib
 import TMLib.ReWrapper as ReWrap
 import TMLib.Definitions as TMdef
 
+from scapy.packet import NoPayload
 
 class TMReWrapper(unittest.TestCase):
 
@@ -13,7 +14,7 @@ class TMReWrapper(unittest.TestCase):
         conversationRWdict = {}
         packetRWdict = {}
 
-        rw = ReWrap.ReWrapper(statistics, globalRWdict, conversationRWdict, packetRWdict)
+        rw = ReWrap.ReWrapper(statistics, globalRWdict, conversationRWdict, packetRWdict, NoPayload)
 
         self.assertTrue( rw.data_dict[TMdef.GLOBAL] is globalRWdict )
         self.assertTrue( rw.data_dict[TMdef.CONVERSATION] is conversationRWdict )
@@ -366,8 +367,6 @@ class TMReWrapper(unittest.TestCase):
             def m_t(packet, data):
                 packet.value += i
             return m_t
-
-        ReWrap.recognized_protocols.append(Pkt)
 
         rw, _, _, _, _ = lib.build_mock_rewrapper()
 

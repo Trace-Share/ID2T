@@ -3,6 +3,7 @@ import scapy.layers.inet6 as inet6
 import scapy.layers.dns as dns
 import scapy.layers.l2 as l2
 import scapy.utils
+from scapy.packet import NoPayload
 
 import ID2TLib.Utility as Util
 
@@ -122,7 +123,7 @@ def build_mock_rewrapper():
     conversationRWdict = {} 
     packetRWdict = {}
 
-    rw = ReWrap.ReWrapper(statistics, globalRWdict, conversationRWdict, packetRWdict)
+    rw = ReWrap.ReWrapper(statistics, globalRWdict, conversationRWdict, packetRWdict, NoPayload)
 
     return rw, statistics, globalRWdict, conversationRWdict, packetRWdict
 

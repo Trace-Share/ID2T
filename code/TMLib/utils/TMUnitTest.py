@@ -6,10 +6,10 @@ import scapy.utils
 
 import ID2TLib.Utility as Util
 
-import TMLib.Utility as MUtil
+import TMLib.utils.utils as MUtil
 import TMLib.TMdict as TMdict
-import TMLib.PacketProcessing as TMpp
-import TMLib.TimestampGeneration as TMtg
+import TMLib.transf.PacketProcessing as TMpp
+import TMLib.transf.TimestampGeneration as TMtg
 
 import TMLib.Definitions as TMdef
 

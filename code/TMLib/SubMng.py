@@ -427,9 +427,9 @@ def apply_timestamp_generation_mode(rewrapper, name):
 #### LOADER
 #################
 
-def load_all():
-    """
-    Imports & executes subscribers. Never to be used during initialization of the manager. 
-    """
-    from subscribers import *
+# def load_all():
+#     """
+#     Imports & executes subscribers. Never to be used during initialization of the manager. 
+#     """
+#     from subscribers import *
 

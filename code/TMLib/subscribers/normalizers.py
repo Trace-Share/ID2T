@@ -14,6 +14,7 @@ import scapy_extend.http as http
 
 from ..transf import PacketProcessing as TMpp
 from ..utils import tmdict_fillers as Filler
+from .. import Definitions as TMdef
 
 def timestamp_static_shift(packet, data, prev_timestamp_old, prev_timestamp_new, curr_timestamp_old, curr_timestamp_new):
     """
@@ -223,7 +224,7 @@ value - these possible keys
 """
 timestamp_function_dict = { # dictionary of known timestamp generation functions
 'timestamp_shift' : {
-    FUNCTION : TMtg.timestamp_static_shift
+    FUNCTION : timestamp_static_shift
 }
 }
 

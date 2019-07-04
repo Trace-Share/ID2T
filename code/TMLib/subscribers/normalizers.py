@@ -118,6 +118,25 @@ def ip_norm_map_cpy(data, cfg):
     if r is not None:
         data[TMdef.GLOBAL]['ip_norm_map'] = r
 
+def arp_norm():
+    fields = [
+        ('hwsrc', 'psrc')
+        , ('hwdst', 'pdst')
+    ]
+    def f(packet, data):
+        ip_remmap = data[TMdef.GLOBAL].get('ip_norm_map')
+        mac_map = data[TMdef.GLOBAL][TMdef.TARGET]['mac_address_map']
+        if ip_remmap is None:
+            return
+        for hw, p in fields:
+            old_mac = packet.getfieldval(hw)
+            if old_mac is not None and mac_map.get(old_mac) is None:
+                ip = packet.getfieldval(p)
+                tp = ip_remmap.get(ip)
+                if tp is not None:
+                    mac_map[old_mac] = macs[tp].get_next(old_mac)
+    return f
+
 """
 Single entry in subsribed_functions represents single tranformation.
 Multiple processing, preprocessing & validation functions may be referenced

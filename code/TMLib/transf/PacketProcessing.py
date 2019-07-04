@@ -1,5 +1,3 @@
-import ID2TLib.Utility as Util
-
 import scapy.layers.inet as inet
 import scapy.layers.inet6 as inet6
 import scapy.layers.dns as dns
@@ -289,23 +287,6 @@ def ivp6_routing_header_change(packet, data):
             ip_new = globalRWdict_findMatch(data, 'ip_address_map', vals[i])
             if ip_new:
                 vals[i] = ip_new
-
-
-###############################################
-################## TTL
-###############################################
-
-def default_calculate_ttl(statistics, ip):
-    """
-    UNUSED
-    """
-    ttl_dist = statistics.get_ttl_distribution(ip)
-    if len(ttl_dist) > 0:
-        ttl_prob_dict = lea.Lea.fromValFreqsDict(ttl_dist)
-        ttl_value = destination_ttl_prob_dict.random()
-    else:
-        ttl_value = Util.handle_most_used_outputs(statistics.get_most_used_ttl_value())
-
 
 ###############################################
 ################## ICMPv6

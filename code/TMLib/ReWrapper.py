@@ -1,7 +1,5 @@
 from . import Definitions as TMdef
 
-from .subscribers import *
-
 class ReWrapper(object):
     """
     Class for rewrapping packets.

@@ -18,6 +18,9 @@ import TMLib.Definitions as TMdef
 
 import TMLib.SubMng as TMm
 
+from TMLib.subscribers import *
+from TMLib.transf import RecalTMdict
+
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 # noinspection PyPep8
@@ -74,7 +77,6 @@ class Mix(BaseAttack.BaseAttack):
         ###
 
         rewrap = build_rewrapper(self, param_dict)
-
 
         ###
         ### Queuing functions
@@ -151,6 +153,10 @@ def build_rewrapper(attack, param_dict):
     global_dict = TMdict.GlobalRWdict(statistics = attack.statistics, attack_statistics = attack.attack_statistics)
     packet_dict = TMdict.PacketDataRWdict()
     conversation_dict = TMdict.ConversationRWdict()
+
+    global_dict.add_recalculation_function(RecalTMdict.recalculate_mss)
+    global_dict.add_recalculation_function(RecalTMdict.recalculate_ttl)
+    global_dict.add_recalculation_function(RecalTMdict.recalculate_win_size)
     ## dicts stored in a dict under param data_dict under keys from TMdef
     rewrap = ReWrapper.ReWrapper(attack.statistics, global_dict, conversation_dict, packet_dict)
 

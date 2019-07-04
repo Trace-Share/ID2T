@@ -1,3 +1,4 @@
+from . import Definitions as TMdef
 
 PROCESSING = 'processing'
 PREPROCESSING = 'preprocessing'
@@ -11,6 +12,7 @@ DICTIONARY = 'dictionary'
 ALT = 'alt'
 KEY = 'key'
 FILL = 'load'
+RECALCULATION = 'recalculation'
 
 
 """
@@ -29,7 +31,8 @@ value - these possible keys
                 representing TMdict dictionaries validation function and name of the dictionary
                 in rewrapper
     ENQUEUE - contains list of entries from subsribed_functions
-    FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+    FILL - list of functions that takes statistics, TMdicts and parsed config as dict on input and fill them with data
+    RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
 """
 subsribed_functions = { # dictionary of known transformation functions
 }
@@ -48,6 +51,7 @@ value - these possible keys
                 representing TMdict dictionaries validation function and name of the dictionary
                 in rewrapper
     FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+    RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
 """
 timestamp_function_dict = { # dictionary of known timestamp generation functions
 }
@@ -64,6 +68,7 @@ value - these possible keys
                 representing TMdict dictionaries validation function and name of the dictionary
                 in rewrapper 
     FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+    RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
 """
 timestamp_postprocess_dict = {
 }
@@ -79,7 +84,8 @@ value - these possible keys
     VALIDATION - contains list of dictionaries witn keys DICTIONARY and FUNCTION
                 representing TMdict dictionaries validation function and name of the dictionary
                 in rewrapper
-    FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+    FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with 
+    RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
 """
 timestamp_alt_function_dict = { # dictionary of known timestamp generation functions
 }
@@ -97,6 +103,7 @@ value - these possible keys
                 representing TMdict dictionaries validation function and name of the dictionary
                 in rewrapper
     FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+    RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
 If any of the values, except for key VALIDATION, is string, a coresponding dictionary will be searched.
 """
 timestamp_generation_mode = {
@@ -120,6 +127,7 @@ def subscribe_protocol_transformation(entry):
                     in rewrapper
         ENQUEUE - contains list of entries from subsribed_functions
         FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+        RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
     """
     subsribed_functions.update(entry)
 
@@ -135,6 +143,7 @@ def subscribe_timestamp_postprocess(entry):
                     representing TMdict dictionaries validation function and name of the dictionary
                     in rewrapper 
         FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+        RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
     """
     timestamp_postprocess_dict.update(entry)
 
@@ -151,7 +160,8 @@ def subscribe_timestamp_process(entry):
         VALIDATION - contains list of dictionaries witn keys DICTIONARY and FUNCTION
                     representing TMdict dictionaries validation function and name of the dictionary
                     in rewrapper
-        FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+        FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with 
+        RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
 
     """
     timestamp_function_dict.update(entry)
@@ -168,6 +178,7 @@ def subscribe_timestamp_alt(entry):
                     representing TMdict dictionaries validation function and name of the dictionary
                     in rewrapper
         FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+        RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
     """
     timestamp_alt_function_dict.update(entry)
 
@@ -185,6 +196,7 @@ def subscribe_timestamp_mode(entry):
                     representing TMdict dictionaries validation function and name of the dictionary
                     in rewrapper
         FILL - list of functions that statistics, TMdicts and parsed config as dict on input and fill them with data
+        RECALCULATION - list of functions recalculates GlobalRWdict data based on current values
     If any of the values, except for key VALIDATION, is string, a coresponding dictionary will be searched.
     """
     timestamp_generation_mode.update(entry)
@@ -224,7 +236,7 @@ def enqueue_function(rewrapper, name):
         validation = record.get(VALIDATION)
         if validation:
             data_dict = rewrapper.data_dict
-            for entry in preprocessing:
+            for entry in validation:
                 tmdict = data_dict.get(entry[DICTIONARY])
                 if tmdict:
                     tmdict.add_validation_function(entry[FUNCTION])
@@ -244,6 +256,12 @@ def enqueue_function(rewrapper, name):
         fillers = record.get(FILL)
         if fillers:
             fill.update(fillers)
+        
+        recals = record.get(RECALCULATION)
+        if recals:
+            global_dict = rewrapper.data_dict.get(TMdef.GLOBAL)
+            for entry in recals:
+                global_dict.add_recalculation_function(entry)
 
     return fill, config_validation
 
@@ -289,6 +307,12 @@ def change_timestamp_function(rewrapper, name):
         fillers = record.get(FILL)
         if fillers:
             fill.update(fillers)
+        
+        recals = record.get(RECALCULATION)
+        if recals:
+            global_dict = rewrapper.data_dict.get(TMdef.GLOBAL)
+            for entry in recals:
+                global_dict.add_recalculation_function(entry)
 
     return fill, config_validation
 
@@ -326,6 +350,12 @@ def enqueue_timestamp_postprocess(rewrapper, name):
         fillers = record.get(FILL)
         if fillers:
             fill.update(fillers)
+        
+        recals = record.get(RECALCULATION)
+        if recals:
+            global_dict = rewrapper.data_dict.get(TMdef.GLOBAL)
+            for entry in recals:
+                global_dict.add_recalculation_function(entry)
 
 
     return fill, config_validation
@@ -364,6 +394,12 @@ def enlist_alt_timestamp_generation_function(rewrapper, name):
         fillers = record.get(FILL)
         if fillers:
             fill.update(fillers)
+        
+        recals = record.get(RECALCULATION)
+        if recals:
+            global_dict = rewrapper.data_dict.get(TMdef.GLOBAL)
+            for entry in recals:
+                global_dict.add_recalculation_function(entry)
 
     return fill, config_validation
 
@@ -417,6 +453,12 @@ def apply_timestamp_generation_mode(rewrapper, name):
         fillers = record.get(FILL)
         if fillers:
             fill.update(fillers)
+        
+        recals = record.get(RECALCULATION)
+        if recals:
+            global_dict = rewrapper.data_dict.get(TMdef.GLOBAL)
+            for entry in recals:
+                global_dict.add_recalculation_function(entry)
 
         cfg_validators = record.get(CONFIG_CHECK)
         if cfg_validators:

@@ -1,6 +1,6 @@
 from ..SubMng import PREPROCESSING, PROCESSING, POSTPROCESSING,\
     VALIDATION, CONFIG_CHECK, ENQUEUE, PROTOCOL, FUNCTION, DICTIONARY,\
-    ALT, KEY, FILL, subscribe_protocol_transformation,\
+    ALT, KEY, FILL, RECALCULATION, subscribe_protocol_transformation,\
     subscribe_timestamp_postprocess, subscribe_timestamp_process,\
     subscribe_timestamp_alt, subscribe_timestamp_mode
 
@@ -14,6 +14,7 @@ import scapy_extend.http as http
 
 from ..transf import PacketProcessing as TMpp
 from ..transf import TimestampGeneration as TMtg
+from ..transf import RecalTMdict as TMrc
 from ..utils import tmdict_fillers as Filler
 
 
@@ -131,6 +132,9 @@ subsribed_functions = { # dictionary of known transformation functions
         Filler.make_ip_map
         ,  Filler.make_ttl_ip_exceptions
     ]
+    , RECALCULATION : [
+        TMrc.recalculate_ttl
+    ]
 }
 
 , 'ip_ttl_change' : {
@@ -143,6 +147,9 @@ subsribed_functions = { # dictionary of known transformation functions
     , FILL : [
         Filler.make_ip_map
         ,  Filler.make_ttl_ip_exceptions
+    ]
+    , RECALCULATION : [
+        TMrc.recalculate_ttl
     ]
 }
 
@@ -193,6 +200,9 @@ subsribed_functions = { # dictionary of known transformation functions
         Filler.make_ip_map
         ,  Filler.make_ttl_ip_exceptions
     ]
+    , RECALCULATION : [
+        TMrc.recalculate_ttl
+    ]
 }
 
 , 'ipv6_hlim_change' : {
@@ -205,6 +215,9 @@ subsribed_functions = { # dictionary of known transformation functions
     , FILL : [
         Filler.make_ip_map
         ,  Filler.make_ttl_ip_exceptions
+    ]
+    , RECALCULATION : [
+        TMrc.recalculate_ttl
     ]
 }
 
@@ -220,6 +233,10 @@ subsribed_functions = { # dictionary of known transformation functions
     ]
     , FILL : [
         Filler.make_ip_map
+        ,  Filler.make_ttl_ip_exceptions
+    ]
+    , RECALCULATION : [
+        TMrc.recalculate_ttl
     ]
 }
 
@@ -242,6 +259,10 @@ subsribed_functions = { # dictionary of known transformation functions
     ]
     , FILL : [
         Filler.make_ip_map
+    ]
+    , RECALCULATION : [
+        TMrc.recalculate_mss
+        , TMrc.recalculate_win_size
     ]
 }
 
@@ -292,6 +313,9 @@ subsribed_functions = { # dictionary of known transformation functions
         , Filler.make_win_ip_exceptions
         , Filler.make_port_ip_map
     ]
+    , RECALCULATION : [
+        TMrc.recalculate_win_size
+    ]
 }
 , 'tcp_mss_change' : {
     PROCESSING : [
@@ -314,6 +338,9 @@ subsribed_functions = { # dictionary of known transformation functions
         Filler.make_ip_map
         , Filler.make_mss_ip_exceptions
         , Filler.make_port_ip_map
+    ]
+    , RECALCULATION : [
+        TMrc.recalculate_win_size
     ]
 }
 , 'tcp_change_default' : {
@@ -338,6 +365,10 @@ subsribed_functions = { # dictionary of known transformation functions
         , Filler.make_mss_ip_exceptions
         , Filler.make_win_ip_exceptions
         , Filler.make_port_ip_map
+    ]
+    , RECALCULATION : [
+        TMrc.recalculate_mss
+        , TMrc.recalculate_win_size
     ]
 }
 

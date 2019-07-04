@@ -1,6 +1,3 @@
-import lea
-
-import ID2TLib.Utility as Util
 
 from . import Definitions as TMdef
 
@@ -50,8 +47,8 @@ class GlobalRWdict(dict):
         """
         dict.__init__(self,*args,**kwargs)
 
-        self.statistics = kwargs['statistics']
-        self.attack_statistics = kwargs['attack_statistics']
+        self.statistics = kwargs.get('statistics')
+        self.attack_statistics = kwargs.get('attack_statistics')
 
         ## Some of the regularily used fields are hardcoded
         self.update({ # data used for rewrapping of layers
@@ -66,15 +63,15 @@ class GlobalRWdict(dict):
             , 'ip_address_map' : {}
 
             , 'ip_ttl_map' : {}
-           , 'ip_ttl_default' : Util.handle_most_used_outputs(self.statistics.get_most_used_ttl_value())
+           , 'ip_ttl_default' : 0
 
             , 'pps_record_map' : {}
 
             , 'win_size_map' : {}
-           , 'win_size_default' : Util.handle_most_used_outputs(self.statistics.get_most_used_win_size())
+           , 'win_size_default' : 0
 
             , 'mss_map' : {}
-           , 'mss_default' : Util.handle_most_used_outputs(self.statistics.get_most_used_mss_value())
+           , 'mss_default' : 0
 
             , 'port_map_forIP' : {}
 
@@ -85,6 +82,10 @@ class GlobalRWdict(dict):
             , 'tcp_avg_delay_map' : {}
         }
         })
+
+        ## self recalculation
+
+        self.recalcs = []
 
         ## stores functions meant to validate that the required fields exist
         self.validation_functions = []
@@ -222,68 +223,24 @@ class GlobalRWdict(dict):
     ###### Recalculate 
     ##################################
 
+    def add_recalculation_function(self, function):
+        """
+        Adds functions that recalculates specified fields in the dictionary.
+        Such function takes GlobalRWdict as a parameter. 
+        All valirecalculation dation functions are executed by method recalculate().
 
-    def recalculate_ttl(self):
+        :param function: recalculation function that takes GlobalRWdict as param and returns True if data is valid, else False
         """
-        Recalculates time to live for ip packets based on IP addresses (new) from ip adress map.
-        IP address in statistics recieve ttl value based on distribution of ttl values for that address.
-        IP addresses not in statistics recieve most used ttl value.
-        """
-        ip_dict = self[TMdef.TARGET]['ip_address_map']
-        ttl_dict = self[TMdef.TARGET]['ip_ttl_map']
-        for ip_old, ip_new in ip_dict.items():
-            if ip_old not in self[TMdef.TARGET]['ttl_exceptions']:
-                ttl_dist = self.statistics.get_ttl_distribution(ip_new)
-                if len(ttl_dist) > 0:
-                    ttl_prob_dict = lea.Lea.fromValFreqsDict(ttl_dist)
-                    ttl_dict[ip_old] = ttl_prob_dict.random()
-                else:
-                    ttl_dict[ip_old] = Util.handle_most_used_outputs(self.statistics.get_most_used_ttl_value())
-
-
-    def recalculate_win_size(self):
-        """
-        Recalculates windows size for ip packets based on IP addresses (new) from ip adress map.
-        IP address in statistics recieve win size value based on distribution of win size values for that address.
-        IP addresses not in statistics recieve most used win size value.
-        """
-        ip_dict = self[TMdef.TARGET]['ip_address_map']
-        win_dict = self[TMdef.TARGET]['win_size_map']
-        for ip_old, ip_new in ip_dict.items():
-            if ip_old not in self[TMdef.TARGET]['ttl_exceptions']:
-                win_dist = self.statistics.get_win_distribution(ip_new)
-                if len(win_dist) > 0:
-                    win_prob_dict = lea.Lea.fromValFreqsDict(win_dist)
-                    win_dict[ip_old] = win_prob_dict.random()
-                else:
-                    win_dict[ip_old] = Util.handle_most_used_outputs(self.statistics.get_most_used_win_size())
-
-    def recalculate_mss(self):
-        """
-        Recalculates maximum segment size for ip packets based on IP addresses (new) from ip adress map.
-        IP address in statistics recieve mss value based on distribution of mss values for that address.
-        IP addresses not in statistics recieve most used mss value.
-        """
-        ip_dict = self[TMdef.TARGET]['ip_address_map']
-        mss_dict = self[TMdef.TARGET]['mss_map']
-        for ip_old, ip_new in ip_dict.items():
-            if ip_old not in self[TMdef.TARGET]['ttl_exceptions']:
-                mss_dist = self.statistics.get_mss_distribution(ip_new)
-                if len(mss_dist) > 0:
-                    mss_prob_dict = lea.Lea.fromValFreqsDict(mss_dist)
-                    mss_dict[ip_old] = mss_prob_dict.random()
-                else:
-                    mss_dict[ip_old] = Util.handle_most_used_outputs(self.statistics.get_most_used_mss_value())
-
+        if function not in self.recalcs:
+            self.recalcs.append(function)
 
     def recalculate(self):
         """
         Executes all recalcuate functions
         """
 
-        self.recalculate_ttl()
-        self.recalculate_win_size()
-        self.recalculate_mss()
+        for f in self.recalcs:
+            f()
 
 
     ##################################

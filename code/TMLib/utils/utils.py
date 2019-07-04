@@ -20,13 +20,13 @@ def parse_yaml_args_withReference(config_filepath, arg_filepath):
     :param arg_filepath: yml file containing input arguments and their values
     :return: dictionary of argument (based on config) and their values (based on arg file and config)
     """
-    with open(config_filepath, 'r') as stream:
+    with config_filepath.open('r') as stream:
         try:
             config = yaml.load(stream)
         except yaml.YAMLError as exc:
             print(exc) # add logger
 
-    with open(arg_filepath, 'r') as stream:
+    with arg_filepath.open('r') as stream:
         try:
             args = yaml.load(stream)
         except yaml.YAMLError as exc:
@@ -46,7 +46,7 @@ def parse_yaml_args(config_filepath):
     :param config_filepath: YAML file path
     :return: dinctionary of arguments and values
     """
-    with open(config_filepath, 'r') as stream:
+    with config_filepath.open('r') as stream:
         try:
             config = yaml.load(stream)
         except yaml.YAMLError as exc:
@@ -62,7 +62,7 @@ def parse_json_args(config_filepath):
     :param config_filepath: json file path
     :return: dinctionary of arguments and values
     """
-    with open(config_filepath, 'r') as stream:
+    with config_filepath.open('r') as stream:
         try:
             config = json.load(stream)
         except json.JSONDecodeError as exc:

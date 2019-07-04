@@ -342,9 +342,38 @@ class ReWrapper(object):
                 f(packet, self.data_dict)
 
         self.unwrap(packet.payload)
+    
+    def recursive_unwrap(self, packet):
+        if isinstance(packet, self.nopayload) or packet is None:
+            return []
+
+        protocol = type(packet)
+        if protocol in self.pruned_protocol:
+            return []
+
+        preprocess_f = self.preprocess_dict.get(protocol)
+        if preprocess_f:
+            for f in preprocess_f:
+                f(packet, self.data_dict)
+
+        postprocess = self.recursive_unwrap(packet.payload)
+
+        process_f = self.process_dict.get(protocol)
+        if process_f:
+            for f in process_f: # TEST - does changing port prevent parsing protocol in TCP packet?
+                f(packet, self.data_dict)
+
+        return postprocess + [(protocol, packet)]
+
+    def recursive_postprocess(self, packet):
+        protocol, packet = packet
+        postprocess_f = self.postprocess_dict.get(protocol)
+        if postprocess_f:
+            for f in postprocess_f:
+                f(packet, self.data_dict)
 
 
-    def digest(self, packet):
+    def digest(self, packet, recursive=False):
         """
         Transforms old packet into new, changed packet based on previous configuration.
 
@@ -355,7 +384,12 @@ class ReWrapper(object):
         if not packet:
             raise TypeError('NoneType passed as packet for digestion.')
 
-        self.unwrap(packet)
+        if recursive:
+            postprocess = self.recursive_unwrap(packet)
+            for p in postprocess:
+                self.recursive_postprocess(p)
+        else:
+            self.unwrap(packet)
         packet.time = self.generate_timestamp(packet, self.data_dict)
         return packet
 

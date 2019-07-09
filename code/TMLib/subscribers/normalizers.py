@@ -309,6 +309,19 @@ subsribed_functions = { # dictionary of known transformation functions
 }
 
 #################
+#### TCP
+#################
+
+, 'tcp_auto_checksum' : {
+    PROCESSING : [
+        {
+        PROTOCOL : inet.TCP
+        , FUNCTION : TMpp.tcp_auto_checksum
+        }
+    ]
+}
+
+#################
 #### DNS
 #################
 , 'dns_change_ips' : {

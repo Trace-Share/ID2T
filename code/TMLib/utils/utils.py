@@ -22,13 +22,13 @@ def parse_yaml_args_withReference(config_filepath, arg_filepath):
     """
     with config_filepath.open('r') as stream:
         try:
-            config = yaml.load(stream)
+            config = yaml.load(stream, Loader=yaml.FullLoader)
         except yaml.YAMLError as exc:
             print(exc) # add logger
 
     with arg_filepath.open('r') as stream:
         try:
-            args = yaml.load(stream)
+            args = yaml.load(stream, Loader=yaml.FullLoader)
         except yaml.YAMLError as exc:
             print(exc) # add logger
 
@@ -48,7 +48,7 @@ def parse_yaml_args(config_filepath):
     """
     with config_filepath.open('r') as stream:
         try:
-            config = yaml.load(stream)
+            config = yaml.load(stream, Loader=yaml.FullLoader)
         except yaml.YAMLError as exc:
             print(exc) # add logger
 

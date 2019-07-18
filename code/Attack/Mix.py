@@ -1,7 +1,6 @@
 import logging
 
-import scapy.layers.inet as inet
-import scapy.utils
+import scapy.all as scapy
 
 import Attack.AttackParameters as atkParam
 import Attack.BaseAttack as BaseAttack
@@ -10,16 +9,14 @@ import ID2TLib.Utility as Util
 import ID2TLib.PcapFile as PcapFile
 import Core.Statistics as Statistics
 
+import TMLib.Definitions as TMdef
 import TMLib.ReWrapper as ReWrapper
 import TMLib.utils.utils as MUtil
 import TMLib.TMdict as TMdict
-
-import TMLib.Definitions as TMdef
-
 import TMLib.SubMng as TMm
-
-from TMLib.subscribers import *
 from TMLib.transf import RecalTMdict
+
+from TMLib.subscribers import default_fs
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -264,7 +261,7 @@ def rewrapping(attack, param_dict, rewrap, timestamp_next_pkt):
     ## read & write all at once
     if attack.readwrite == 'bulk':
         ## read all packets
-        packets = scapy.utils.rdpcap(attack.attack_file)
+        packets = scapy.rdpcap(attack.attack_file)
 
         ## timestamp shift based on first packet and input param
         rewrap.set_timestamp_shift(timestamp_next_pkt - packets[0].time)
@@ -279,7 +276,7 @@ def rewrapping(attack, param_dict, rewrap, timestamp_next_pkt):
     ## read & write packet by packet
     elif attack.readwrite == 'sequence':
         ## create packet reader
-        packets = scapy.utils.PcapReader(attack.attack_file)
+        packets = scapy.PcapReader(attack.attack_file)
 
         ## temporary list, avoid recreating lists for writing
         tmp_l = [0]

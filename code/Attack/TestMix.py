@@ -5,9 +5,7 @@ from time import perf_counter
 from datetime import datetime
 from random import randint
 
-import lea
-import scapy.layers.inet as inet
-import scapy.utils
+import scapy.all as scapy
 
 import Attack.AttackParameters as atkParam
 import Attack.BaseAttack as BaseAttack
@@ -17,12 +15,7 @@ import ID2TLib.PcapFile as PcapFile
 import Core.Statistics as Statistics
 
 import Attack.Mix as Mix
-import TMLib.ReWrapper as ReWrapper
-import TMLib.utils.utils as MUtil
-import TMLib.TMdict as TMdict
 import TMLib.utils.db_utils as Testing
-
-import TMLib.Definitions as TMdef
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 

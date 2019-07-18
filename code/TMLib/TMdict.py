@@ -240,7 +240,7 @@ class GlobalRWdict(dict):
         """
 
         for f in self.recalcs:
-            f()
+            f(self)
 
 
     ##################################

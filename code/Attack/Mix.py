@@ -125,9 +125,9 @@ def parse_config(config_path):
     :param config_path: path to config file
     """
     if config_path[-1] == 'n': ## naive check for json by last letter
-        param_dict = MUtil.parse_json_args(config_path)
+        param_dict = MUtil.parse_json_args(Path(config_path))
     else:
-        param_dict = MUtil.parse_yaml_args(config_path)
+        param_dict = MUtil.parse_yaml_args(Path(config_path))
     return param_dict
 
 

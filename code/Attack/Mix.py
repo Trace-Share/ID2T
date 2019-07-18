@@ -156,7 +156,7 @@ def build_rewrapper(attack, param_dict):
     global_dict.add_recalculation_function(RecalTMdict.recalculate_ttl)
     global_dict.add_recalculation_function(RecalTMdict.recalculate_win_size)
     ## dicts stored in a dict under param data_dict under keys from TMdef
-    rewrap = ReWrapper.ReWrapper(attack.statistics, global_dict, conversation_dict, packet_dict)
+    rewrap = ReWrapper.ReWrapper(attack.statistics, global_dict, conversation_dict, packet_dict, scapy.NoPayload)
 
     return rewrap
 

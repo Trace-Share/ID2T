@@ -384,13 +384,18 @@ class ReWrapper(object):
         if not packet:
             raise TypeError('NoneType passed as packet for digestion.')
 
+        self.data_dict[TMdef.PACKET]['timestamp.current.old'] = packet.time
+        packet.time = self.generate_timestamp(packet, self.data_dict)
+        self.data_dict[TMdef.PACKET]['timestamp.current.new'] = packet.time
+
         if recursive:
             postprocess = self.recursive_unwrap(packet)
             for p in postprocess:
                 self.recursive_postprocess(p)
         else:
             self.unwrap(packet)
-        packet.time = self.generate_timestamp(packet, self.data_dict)
+        
+        self.data_dict[TMdef.PACKET].clear()
         return packet
 
 

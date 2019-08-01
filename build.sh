@@ -26,6 +26,8 @@ if [ ! ${NONINTERACTIVE} = true ]; then
     ./resources/install_dependencies.sh
 fi
 
+# update submodules
+git submodule update --remote --merge
 # Moving TMLib
 mv submodules/Trace-Manipulation/TMLib code/TMLib
 

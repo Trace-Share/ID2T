@@ -278,7 +278,7 @@ class ReWrapper(object):
         data[TMdef.CONVERSATION]['previous_timestamp_old'] = current_timestamp_old ## update data from next iteration
         ## Default value
         new_timestamp = current_timestamp_old
-        data[TMdef.PACKET]['current_timestamp_old_without_postprocess'] = current_timestamp_old 
+        data[TMdef.PACKET]['timestamp.current.old.nopostprocess'] = current_timestamp_old 
         if not previous_timestamp_old: 
             ## IF this is the first packet, only shift
             new_timestamp = packet.time + data[TMdef.GLOBAL][TMdef.ATTACK]['timestamp_shift']
@@ -288,8 +288,8 @@ class ReWrapper(object):
                 self.timestamp_function(packet, data, previous_timestamp_old, previous_timestamp_new, current_timestamp_old, new_timestamp),
                 self.timestamp_function, 
                 new_timestamp)
-            data[TMdef.PACKET]['current_timestamp_new_without_postprocess'] = new_timestamp
-            data[TMdef.PACKET]['current_timestamp_shift_without_postprocess'] = new_timestamp - current_timestamp_old
+            data[TMdef.PACKET]['timestamp.current.new.nopostprocess'] = new_timestamp
+            data[TMdef.PACKET]['timestamp.current.shift.nopostprocess'] = new_timestamp - current_timestamp_old
             ## Apply PostProcess functions
             for f in self.timestamp_postprocess:
                 new_timestamp = test_generated_timestamp_order(previous_timestamp_new,

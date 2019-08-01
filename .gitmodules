@@ -7,6 +7,6 @@
 [submodule "code_boost/src/libtins"]
 	path = code_boost/src/libtins
 	url = https://github.com/mfontanini/libtins
-[submodule "submodules/tmlib"]
-	path = submodules/tmlib
+[submodule "submodules/Trace-Manipulation"]
+	path = submodules/Trace-Manipulation
 	url = https://github.com/Trace-Share/Trace-Manipulation

@@ -27,7 +27,7 @@ if [ ! ${NONINTERACTIVE} = true ]; then
 fi
 
 # update submodules
-(base) PS>git submodule update --init --remote -- submodules/Trace-Manipulation
+git submodule update --init --remote -- submodules/Trace-Manipulation
 # Moving TMLib
 mv submodules/Trace-Manipulation/TMLib code/TMLib
 

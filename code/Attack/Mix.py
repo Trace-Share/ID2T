@@ -213,6 +213,7 @@ def enqueue_functions(param_dict, rewrap):
     # TCP
     , 'tcp_change_default'
     , 'tcp_auto_checksum'
+    , 'tcp_timestamp_change'
     # UDP
     , 'udp_change_default'
     , 'udp_auto_checksum'

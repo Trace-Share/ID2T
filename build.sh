@@ -28,8 +28,8 @@ fi
 
 # update submodules
 git submodule update --init --remote -- submodules/Trace-Manipulation
-# Moving TMLib
-mv submodules/Trace-Manipulation/TMLib code/TMLib
+## Moving TMLib
+# mv submodules/Trace-Manipulation/TMLib code/TMLib
 
 LIBTINS_VERSION=$(./resources/libtins_version.sh)
 

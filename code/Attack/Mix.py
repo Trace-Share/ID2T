@@ -145,7 +145,7 @@ def build_rewrapper(attack, param_dict):
 
     ## generate statistics for attack pcap
     attack.attack_statistics = Statistics.Statistics(PcapFile.PcapFile(attack.attack_file))
-    attack.attack_statistics.load_pcap_statistics(False, True, False, False, [], False, None)
+    attack.attack_statistics.load_pcap_statistics(False, True, False, False, [], False, False)
 
     ## statistics stored in global dict under the keys
     global_dict = TMdict.GlobalRWdict(statistics = attack.statistics, attack_statistics = attack.attack_statistics)

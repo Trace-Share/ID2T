@@ -26,6 +26,11 @@ if [ ! ${NONINTERACTIVE} = true ]; then
     ./resources/install_dependencies.sh
 fi
 
+# update submodules
+git submodule update --init --remote -- submodules/Trace-Manipulation
+## Moving TMLib
+# mv submodules/Trace-Manipulation/TMLib code/TMLib
+
 LIBTINS_VERSION=$(./resources/libtins_version.sh)
 
 # Fullbuild or nonexistent venv

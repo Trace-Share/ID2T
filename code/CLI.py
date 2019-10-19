@@ -1,6 +1,10 @@
 #! /usr/bin/env python3
 import argparse
 import sys
+from pathlib import Path
+sys.path.insert(
+    0, str( (Path(__file__).parent / Path('../submodules/Trace-Manipulation') ).resolve() )
+)
 
 from Core.Controller import Controller
 

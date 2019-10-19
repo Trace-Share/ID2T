@@ -45,3 +45,6 @@ test_efficiency
 .venv
 
 .DS_Store
+
+# editor
+.vscode

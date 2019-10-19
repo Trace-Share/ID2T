@@ -1,10 +1,7 @@
 import logging
-import random as rnd
-import os
+from pathlib import Path
 
-import lea
-import scapy.layers.inet as inet
-import scapy.utils
+import scapy.all as scapy
 
 import Attack.AttackParameters as atkParam
 import Attack.BaseAttack as BaseAttack
@@ -13,13 +10,14 @@ import ID2TLib.Utility as Util
 import ID2TLib.PcapFile as PcapFile
 import Core.Statistics as Statistics
 
-import TMLib.ReWrapper as ReWrapper
-import TMLib.Utility as MUtil
-import TMLib.TMdict as TMdict
-
 import TMLib.Definitions as TMdef
+import TMLib.ReWrapper as ReWrapper
+import TMLib.utils.utils as MUtil
+import TMLib.TMdict as TMdict
+import TMLib.SubMng as TMm
+from TMLib.transf import RecalTMdict
 
-import TMLib.TMmanager as TMm
+from TMLib.subscribers import default_fs
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -78,7 +76,6 @@ class Mix(BaseAttack.BaseAttack):
 
         rewrap = build_rewrapper(self, param_dict)
 
-
         ###
         ### Queuing functions
         ###
@@ -129,9 +126,9 @@ def parse_config(config_path):
     :param config_path: path to config file
     """
     if config_path[-1] == 'n': ## naive check for json by last letter
-        param_dict = MUtil.parse_json_args(config_path)
+        param_dict = MUtil.parse_json_args(Path(config_path))
     else:
-        param_dict = MUtil.parse_yaml_args(config_path)
+        param_dict = MUtil.parse_yaml_args(Path(config_path))
     return param_dict
 
 
@@ -148,14 +145,18 @@ def build_rewrapper(attack, param_dict):
 
     ## generate statistics for attack pcap
     attack.attack_statistics = Statistics.Statistics(PcapFile.PcapFile(attack.attack_file))
-    attack.attack_statistics.load_pcap_statistics(False, True, False, False, [], False, None)
+    attack.attack_statistics.load_pcap_statistics(False, True, False, False, [], False, False)
 
     ## statistics stored in global dict under the keys
     global_dict = TMdict.GlobalRWdict(statistics = attack.statistics, attack_statistics = attack.attack_statistics)
     packet_dict = TMdict.PacketDataRWdict()
     conversation_dict = TMdict.ConversationRWdict()
+
+    global_dict.add_recalculation_function(RecalTMdict.recalculate_mss)
+    global_dict.add_recalculation_function(RecalTMdict.recalculate_ttl)
+    global_dict.add_recalculation_function(RecalTMdict.recalculate_win_size)
     ## dicts stored in a dict under param data_dict under keys from TMdef
-    rewrap = ReWrapper.ReWrapper(attack.statistics, global_dict, conversation_dict, packet_dict)
+    rewrap = ReWrapper.ReWrapper(attack.statistics, global_dict, conversation_dict, packet_dict, scapy.NoPayload)
 
     return rewrap
 
@@ -212,6 +213,7 @@ def enqueue_functions(param_dict, rewrap):
     # TCP
     , 'tcp_change_default'
     , 'tcp_auto_checksum'
+    , 'tcp_timestamp_change'
     # UDP
     , 'udp_change_default'
     , 'udp_auto_checksum'
@@ -261,7 +263,7 @@ def rewrapping(attack, param_dict, rewrap, timestamp_next_pkt):
     ## read & write all at once
     if attack.readwrite == 'bulk':
         ## read all packets
-        packets = scapy.utils.rdpcap(attack.attack_file)
+        packets = scapy.rdpcap(attack.attack_file)
 
         ## timestamp shift based on first packet and input param
         rewrap.set_timestamp_shift(timestamp_next_pkt - packets[0].time)
@@ -276,7 +278,7 @@ def rewrapping(attack, param_dict, rewrap, timestamp_next_pkt):
     ## read & write packet by packet
     elif attack.readwrite == 'sequence':
         ## create packet reader
-        packets = scapy.utils.PcapReader(attack.attack_file)
+        packets = scapy.PcapReader(attack.attack_file)
 
         ## temporary list, avoid recreating lists for writing
         tmp_l = [0]

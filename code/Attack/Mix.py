@@ -211,6 +211,7 @@ def enqueue_functions(param_dict, rewrap):
     , 'icmp_tcp_change_default'
     , 'icmp_udp_change_default'
     , 'icmp_auto_checksum'
+    , 'icmp6_auto_checksum'
     # TCP
     , 'tcp_change_default'
     , 'tcp_auto_checksum'

@@ -1,4 +1,10 @@
 import logging
+
+from ID2TLib.Utility import handle_most_used_outputs
+from TM_dependencies import stat_util
+## Setting up outside dependency in TMlib
+stat_util.handle_most_used_outputs = handle_most_used_outputs
+
 from pathlib import Path
 
 import scapy.all as scapy

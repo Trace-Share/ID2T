@@ -1,4 +1,10 @@
 import logging
+
+from ID2TLib.Utility import handle_most_used_outputs
+from TM_dependencies import stat_util
+## Setting up outside dependency in TMlib
+stat_util.handle_most_used_outputs = handle_most_used_outputs
+
 from pathlib import Path
 
 import scapy.all as scapy
@@ -211,6 +217,7 @@ def enqueue_functions(param_dict, rewrap):
     , 'icmp_tcp_change_default'
     , 'icmp_udp_change_default'
     , 'icmp_auto_checksum'
+    , 'icmp6_auto_checksum'
     # TCP
     , 'tcp_change_default'
     , 'tcp_auto_checksum'

@@ -143,7 +143,7 @@ class Controller:
                 tmp_path_tuple = self.pcap_dest_path.rpartition("/")
                 result_path = Util.OUT_DIR + tmp_path_tuple[2]
 
-            os.rename(self.pcap_dest_path, result_path)
+            shutil.move(self.pcap_dest_path, result_path)
             self.pcap_dest_path = result_path
             self.created_files = [self.pcap_dest_path]
 
@@ -151,7 +151,7 @@ class Controller:
             pcap_basename = os.path.splitext(self.pcap_dest_path)[0]
             for x in self.attack_controller.additional_files:
                 outpath = pcap_basename + "_" + x
-                os.rename(x, outpath)
+                shutil.move(x, outpath)
                 self.created_files.append(outpath)
 
             print("done.")

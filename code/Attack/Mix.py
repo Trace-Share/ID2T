@@ -293,9 +293,9 @@ def rewrapping(attack, param_dict, rewrap, timestamp_next_pkt):
 
         attack.pkt_num = 0
 
-        packet = packets.read_packet() # read next packet
+        # packet = packets.read_packet() # read next packet
 
-        while (packet): # empty packet == None
+        for packet in packets: # empty packet == None
             tmp_l[0] = packet # store current packet for writing 
 
             if attack.pkt_num == 0: # first packet
@@ -311,7 +311,7 @@ def rewrapping(attack, param_dict, rewrap, timestamp_next_pkt):
                 attack.write_attack_pcap(packets=tmp_l, append_flag=True, destination_path=attack.path_attack_pcap)
 
             attack.pkt_num += 1
-            packet = packets.read_packet() # read next packet
+            # packet = packets.read_packet() # read next packet
 
 def timestamp_function_dependency(fname, data_dict):
     ## requires threshold

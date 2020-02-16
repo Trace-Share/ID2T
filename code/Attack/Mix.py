@@ -1,4 +1,5 @@
 import logging
+import decimal
 
 from ID2TLib.Utility import handle_most_used_outputs
 from TM_dependencies import stat_util
@@ -274,7 +275,7 @@ def rewrapping(attack, param_dict, rewrap, timestamp_next_pkt):
         packets = scapy.rdpcap(attack.attack_file)
 
         ## timestamp shift based on first packet and input param
-        rewrap.set_timestamp_shift(timestamp_next_pkt - packets[0].time)
+        rewrap.set_timestamp_shift(decimal.Decimal(timestamp_next_pkt) - packets[0].time)
 
         ## rewrapp packets
         for packet in packets:
@@ -299,7 +300,7 @@ def rewrapping(attack, param_dict, rewrap, timestamp_next_pkt):
             tmp_l[0] = packet # store current packet for writing 
 
             if attack.pkt_num == 0: # first packet
-                rewrap.set_timestamp_shift(timestamp_next_pkt - packet.time)
+                rewrap.set_timestamp_shift(decimal.Decimal(timestamp_next_pkt) - packet.time)
                 rewrap.digest(packet)
                 attack.attack_start_utime = packet.time
                 ## Create new pcap

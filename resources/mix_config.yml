@@ -123,3 +123,14 @@ timestamp.random.set:
 # old if IP address before IP address mapping
       address: 0.0.0.0
 # IP address
+
+
+tcp.timestamp.shift:
+# map of IP addresses, and values for shifting associated TCP timestamp fields
+- ip: 240.170.0.2
+  shift: 0
+- ip: 240.0.0.2
+  shift: 0
+
+tcp.timestamp.shift.default: 0
+# default value used for timestamp shifts, if no explicit value is provided in mapping

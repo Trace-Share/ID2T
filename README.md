@@ -7,13 +7,15 @@ Fork of the official **[ID2T repository](https://github.com/tklab-tud/ID2T)** ex
 
 ### Table of Contents
 
-* [Description](#description)
-* [Requirements](#requirements)
-* [Installation](#installation)
-* [Usage](#usage)
-  + [Basic Commands](#basic-commands)
-  + [Inject Configuration](#inject-configuration)
-* [Contribution](#contribution)
+- [Trace-Share: ID2T](#trace-share-id2t)
+    - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Basic Commands](#basic-commands)
+    - [Inject Configuration](#inject-configuration)
+  - [Contribution](#contribution)
 
 
 ## Description
@@ -87,7 +89,7 @@ timestamp:
   random.treshold: 0.001
 ```
 
-* **ip.map**: Mapping of IP addresses in the annotated unit to addresses in the target trace file. No additional adaptation of annotated unit is performed if selected IPs are not presented in the target trace file.
+* **ip.map** (mandatory): Mapping of IP addresses in the annotated unit to addresses in the target trace file. No additional adaptation of annotated unit is performed if selected IPs are not presented in the target trace file.
 ```yaml
 ip.map:
   - ip:
@@ -95,12 +97,24 @@ ip.map:
       new: 192.168.0.11
 ```
 
-* **mac.map**: Mapping of MAC addresses in the annotated unit to addresses in the target trace file.
+* **mac.map** (mandatory): Mapping of MAC addresses in the annotated unit to addresses in the target trace file.
 ```yaml
 mac.map:
   - mac: 
       old: 08:00:27:bd:c2:37
       new: 00:11:09:95:26:FE
+```
+
+* **tcp.timestamp.shift** (mandatory): Explicit mapping of timestamp shift values for TCP timestamp field. The mapping is done per underlying layers IP address.
+```yaml
+tcp.timestamp.shift:
+- ip: 240.170.0.2
+  shift: 0
+```
+
+* **tcp.timestamp.shift.default** (mandatory): Default shift values for TCP timestamp field. Value is used for all TCP packets with no explicitly declared shift value (based on IP address of udnerlying layer).
+```yaml
+tcp.timestamp.shift.default: 0
 ```
 
 * **port.ip.map**: Changing ports used in the annotated unit into a new port. Option *type* in *ip* determines if the defined address is old or newer one after IPs mapping (available options are *old* or *new*).

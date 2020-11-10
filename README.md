@@ -3,7 +3,7 @@
 
 Fork of the official **[ID2T repository](https://github.com/tklab-tud/ID2T)** extended by functions to modify and combine existing packet traces.
 
-[![Build Status](https://travis-ci.org/Trace-Share/ID2T.svg?branch=master)](https://travis-ci.org/Trace-Share/ID2T)
+[![Build Status](https://travis-ci.com/Trace-Share/ID2T.svg?branch=master)](https://travis-ci.com/Trace-Share/ID2T)
 
 ### Table of Contents
 
